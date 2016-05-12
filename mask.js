@@ -1,7 +1,10 @@
-var createMask=(function(divwidth,divheight,pvalue,buttonvalue,fn){
+var createMask=(function(pvalue,buttonvalue,fn,hasclose,closefn){
 	var maskdiv;
-    
-	return function(divwidth,divheight,pvalue,buttonvalue,hasclose,fn){
+  var p;
+  var div;
+  var i;
+  var button; 
+	return function(pvalue,buttonvalue,fn,hasclose,closefn){
 		if(!maskdiv){
            maskdiv=document.createElement('div');
            maskdiv.style.width=document.body.clientWidth > window.innerWidth ? (document.body.clientWidth+"px"):(window.innerWidth+"px");
@@ -10,11 +13,11 @@ var createMask=(function(divwidth,divheight,pvalue,buttonvalue,fn){
            maskdiv.style.top=0;
            maskdiv.style.zIndex=30000;
            maskdiv.style.backgroundColor="rgba(0,0,0,0.5)";
-           var div=document.createElement('div');
-           var p=document.createElement('p');
+           div=document.createElement('div');
+           p=document.createElement('p');
            var ptext=document.createTextNode(pvalue);
            var buttontext=document.createTextNode(buttonvalue);
-           var button=document.createElement("button");
+           button=document.createElement("button");
            p.style.fontSize="20px";
            p.style.marginTop="30px";
            p.style.maxHeight="90px";
@@ -30,24 +33,36 @@ var createMask=(function(divwidth,divheight,pvalue,buttonvalue,fn){
            button.style.color="#fff";
            button.style.cursor="pointer";
            button.style.borderRadius="5px";
-           button.onclick=function(){maskdiv.style.display="none";fn(); };
+           button.onclick=function(){maskdiv.style.display="none"; 
+           if(typeof fn =='function'){
+                 fn();
+                }
+             };
            div.style.position="absolute";
            div.style.margin="auto";
            div.style.top="150px";
            div.style.left=0;
            div.style.right=0;
            div.style.background="#fff";
-           div.style.width=divwidth+"px";
-           div.style.height=divheight+"px";
+           div.style.width=400+"px";
+           div.style.height=200+"px";
            div.style.borderRadius="10px";
            div.style.padding="20px";
            div.style.textAlign="center";
-            if(hasclose){
-             var i=document.createElement('i');
+           if(hasclose){
+             i=document.createElement('i');
              i.className="icon icon-cross";
              i.style.float="right";
+             i.style.position="absolute";
+             i.style.top="10px";
+             i.style.right="10px";
              i.style.cursor="pointer";
-             i.onclick=function(){maskdiv.style.display="none";};
+             i.innerText="关闭";
+             i.onclick=function(){maskdiv.style.display="none";
+                if(typeof closefn=='function'){
+                  closefn();
+                }
+              };
               div.appendChild(i);
           }
            
@@ -61,10 +76,48 @@ var createMask=(function(divwidth,divheight,pvalue,buttonvalue,fn){
               maskdiv.style.height=document.body.clientHeight > window.innerHeight ? (document.body.clientHeight+"px"):(window.innerHeight+"px");
            }
 
-		}
+		}else{
+      maskdiv.style.width=document.body.clientWidth > window.innerWidth ? (document.body.clientWidth+"px"):(window.innerWidth+"px");
+      maskdiv.style.height=document.body.clientHeight > window.innerHeight ? (document.body.clientHeight+"px"):(window.innerHeight+"px");
+      p.innerText=pvalue;
+      button.innerText=buttonvalue;
+      button.onclick=function(){maskdiv.style.display="none";
+         if(typeof fn =='function'){
+                 fn();
+                }
+       };
+      if(i){
+        console.log(hasclose);
+        if(!hasclose){i.style.display="none";}else{
+          i.style.display="";
+          i.onclick=function(){maskdiv.style.display="none";
+               if(typeof closefn=='function'){
+                  closefn();
+                }
+             };
+        }
+      }else{
+            if(hasclose){
+             i=document.createElement('i');
+             i.className="icon icon-cross";
+             i.style.float="right";
+             i.style.cursor="pointer";
+             i.innerText="关闭";
+             i.style.position="absolute";
+             i.style.top="10px";
+             i.style.right="10px";
+             i.onclick=function(){maskdiv.style.display="none";
+               if(typeof closefn=='function'){
+                  closefn();
+                }
+             };
+              div.appendChild(i);
+          }
+      }
+    }
 		maskdiv.style.display="block";
 		return maskdiv;
 	}
 
 })()
- createMask(400,200,"确认该消息？","确定",false,function(){location.reload(); });
+ createMask("确认该消息？","确定",function(){console.log("close"); },true,function(){console.log("press close");});
