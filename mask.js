@@ -67,4 +67,4 @@ var createMask=(function(divwidth,divheight,pvalue,buttonvalue,fn){
 	}
 
 })()
-window.onload=function(){createMask(400,200,"确认该消息？","确定",false,function(){location.reload(); });}
+ createMask(400,200,"确认该消息？","确定",false,function(){location.reload(); });
