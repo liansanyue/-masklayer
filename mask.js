@@ -119,5 +119,4 @@ var createMask=(function(pvalue,buttonvalue,fn,hasclose,closefn){
 		return maskdiv;
 	}
 
-})()
- createMask("确认该消息？","确定",function(){console.log("close"); },true,function(){console.log("press close");});
+})();
